@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: kafka-test-email-service
+  mail:
+    host: localhost
+    port: 1025
+    username:
+    password:
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+  Kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: email-service-listener-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.value.default.type: org.ikitadevs.kafkatestemailservice.model.Event
+        spring.json.trusted.packages: "*"
+        spring.deserializer.exception.handler: org.springframework.kafka.listener.loggingErrorHandler
+        org.springframework.kafka.support.json.JsonDeserializer.LOG_NOT_FOUND_KEY: true
+        org.springframework.kafka.support.json.JsonDeserializer.LOG_CONVERSION_ERRORS: true
+        auto-offset-reset: earliest
+        spring.json.use.type.headers: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+  datasource:
+    url: jdbc:mysql://localhost:5000/javatest
+    username: tester
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 60
+      minimum-idle: 10
+      eureka:
+        client:
+          service-url:
+            defaultZone: http://localhost:8761/eureka
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+server:
+  port: 8083
