@@ -77,5 +77,5 @@ The system consists of two main services and a shared infrastructure:
 | :--- | :--- | :--- |
 | `GET` | `/tests/firenforget` | Trigger an async "Fire and Forget" call to User Service |
 | `GET` | `/tests/requestdata` | Synchronously request data from User Service |
-
----
+## License
+[MIT](https://github.com/MykiDevs/event-driven-system-with-redis-and-kafka/blob/main/LICENSE)
