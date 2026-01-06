@@ -59,7 +59,7 @@ The system consists of two main services and a shared infrastructure:
 ### Accessing the System
 - **User Service API:** `http://localhost:8081/swagger-ui/index.html`
 - **Email Service API:** `http://localhost:8083`
-- **Mailhog Web UI:** `http://localhost:8025` (View sent emails here)
+- **Mailhog Web UI:** `http://localhost:8025`
 
 ## API Reference
 
