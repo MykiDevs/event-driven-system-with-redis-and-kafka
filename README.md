@@ -1,6 +1,6 @@
 # Event-Driven System with Redis And Kafka
 
-A simple demonstration of event-driven architecture for user registration and notification workflows using Kafka, Redis, and MySQL.
+A simple monorepo demonstration of event-driven architecture for user registration and notification workflows using Kafka, Redis, and MySQL.
 
 ## Architecture Overview
 
@@ -40,21 +40,9 @@ The system consists of two main services and a shared infrastructure:
 - Java 17+
 
 ### Running with Docker
-1. **Build the Services:**
-   ```bash
-   # Build User Service (Maven)
-   cd kafka-redis-test-user-service
-   ./mvnw clean package -DskipTests
-
-   # Build Email Service (Gradle)
-   cd ../kafka-test-email-service
-   ./gradlew build -x test
-   ```
-
-2. **Using Docker Compose:**
-   ```bash
-   docker compose up --build
-   ```
+```bash
+docker compose up --build
+```
 
 ### Accessing the System
 - **User Service API:** `http://localhost:8081/swagger-ui/index.html`
