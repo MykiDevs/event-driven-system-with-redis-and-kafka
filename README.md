@@ -1,18 +1,18 @@
-# Spring Boot Microservices: Event-Driven Kafka & Redis System
+# Event-Driven System with Redis And Kafka
 
-A high-performance microservices demonstration implementing an event-driven architecture for user registration and notification workflows using **Kafka**, **Redis**, and **MySQL**.
+A simple demonstration of event-driven architecture for user registration and notification workflows using Kafka, Redis, and MySQL.
 
 ## Architecture Overview
 
 The system consists of two main services and a shared infrastructure:
 
-1.  **User Service (Port 8081):**
+1.  **User Service:**
     *   Handles User CRUD operations and profile management.
     *   **Caching:** Uses **Redis** to store and retrieve user profiles, significantly reducing database load.
     *   **Producer:** Upon user creation, it persists a `PROCESSING` event in MySQL and publishes a message to **Kafka** (topic: `user.email.send`).
     *   **Confirmation Listener:** Listens for `user.email.sent` to update the local event status to `FINISHED`.
 
-2.  **Email Service (Port 8083):**
+2.  **Email Service:**
     *   **Consumer:** Subscribes to `user.email.send` events.
     *   **Notification:** Sends welcome emails via **Mailhog** (SMTP).
     *   **Event Tracking:** Maintains its own event log in MySQL to ensure idempotency.
@@ -28,29 +28,18 @@ The system consists of two main services and a shared infrastructure:
 
 - **Java 17**
 - **Spring Boot 3.4.0**
-- **Spring Data JPA** (Hibernate 7)
-- **Spring Kafka** (Pub/Sub messaging)
-- **Spring Data Redis** (Caching)
-- **WebClient** (Reactive inter-service REST calls)
-- **MapStruct** (Entity-DTO mapping)
-- **Docker & Docker Compose** (Containerization)
+- **Spring Data JPA**
+- **Spring Kafka**
+- **Spring Data Redis**
+- **Docker & Docker Compose**
 
-## Features
-
-- **Asynchronous Workflow:** User registration is decoupled from email sending via Kafka.
-- **Idempotent Consumers:** The Email Service checks event UUIDs in the database to prevent duplicate processing.
-- **Distributed Caching:** Seamless Redis integration with automatic cache expiration.
-- **Inter-service REST:** Uses `WebClient` for synchronous "Request-Response" patterns between services.
-- **Global Error Handling:** Standardized error responses across all services.
-
-## Setup and Running
+## Getting Started
 
 ### Prerequisites
-- Docker and Docker Compose installed.
-- JDK 17+ (if building locally).
+- Docker
+- Java 17+
 
 ### Running with Docker
-
 1. **Build the Services:**
    ```bash
    # Build User Service (Maven)
@@ -62,9 +51,8 @@ The system consists of two main services and a shared infrastructure:
    ./gradlew build -x test
    ```
 
-2. **Start the Infrastructure:**
+2. **Using Docker Compose:**
    ```bash
-   # From the root directory containing docker-compose.yml
    docker compose up --build
    ```
 
@@ -75,27 +63,19 @@ The system consists of two main services and a shared infrastructure:
 
 ## API Reference
 
-### User Service (8081)
+### User Service
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `POST` | `/api/users/` | Create user & trigger Kafka event |
 | `GET` | `/api/users/{id}` | Get user (Cached via Redis) |
 | `GET` | `/api/users/` | Paginated list of users |
 | `PATCH` | `/api/users/{id}` | Update user & invalidate cache |
-| `GET` | `/tests/responsedata` | Test endpoint for incoming WebClient calls |
+| `GET` | `/tests/responsedata` | Test endpoint |
 
-### Email Service (8083)
+### Email Service
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/tests/firenforget` | Trigger an async "Fire and Forget" call to User Service |
-| `GET` | `/tests/requestdata` | Synchronously request data from User Service via WebClient |
-
-## Configuration Details
-
-The services are configured to automatically wait for the MySQL database to be ready before starting. 
-Key environment variables used in `docker-compose.yml`:
-- `SPRING_KAFKA_BOOTSTRAP_SERVERS`: `kafka:29092`
-- `SPRING_DATA_REDIS_HOST`: `redis`
-- `USER_SERVICE_URL`: `http://user-service:8081`
+| `GET` | `/tests/requestdata` | Synchronously request data from User Service |
 
 ---
