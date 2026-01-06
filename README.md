@@ -31,7 +31,7 @@ The system consists of two main services and a shared infrastructure:
 - **Spring Data JPA**
 - **Spring Kafka**
 - **Spring Data Redis**
-- **Docker & Docker Compose**
+- **Docker**
 
 ## Getting Started
 
